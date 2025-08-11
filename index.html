@@ -46,6 +46,7 @@
     .card p {
         font-size: 1em;
         color: #cccccc;
+        margin: 5px 0;
     }
     button {
         margin-top: 20px;
@@ -72,6 +73,11 @@
     @keyframes fall {
         to { transform: translateY(110vh); opacity: 0; }
     }
+    .from-text {
+        margin-top: 10px;
+        color: #aaa;
+        font-style: italic;
+    }
 </style>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
 </head>
@@ -81,45 +87,6 @@
     <h1>HAPPY BIRTHDAY</h1>
     <h2>Yuniar Kamboja</h2>
     <p>Semoga hidup selalu seperti drama Korea: penuh kejutan indah, dan semua masalah selesai dalam 16 episode. 💖</p>
-    <p1>IYA LAGI</p1>
+    <p>IYA LAGI</p>
     <button onclick="startEffect()">🎊 Rayakan!</button>
     <p class="from-text">dari binnn</p>
-</div>
-
-<script>
-    function startEffect() {
-        for (let i = 0; i < 30; i++) {
-            const emoji = document.createElement("div");
-            emoji.classList.add("emoji");
-            emoji.textContent = "😭";
-            emoji.style.left = Math.random() * 100 + "vw";
-            emoji.style.animationDuration = (Math.random() * 2 + 3) + "s";
-            document.body.appendChild(emoji);
-            setTimeout(() => emoji.remove(), 5000);
-        }
-
-        confetti({
-            particleCount: 100,
-            spread: 60,
-            origin: { x: 0, y: 0.6 }
-        });
-        confetti({
-            particleCount: 100,
-            spread: 60,
-            origin: { x: 1, y: 0.6 }
-        });
-    }
-
-    const script = document.createElement("script");
-    script.src = "https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js";
-    document.head.appendChild(script);
-</script>
-
-</body>
-</html>
-
-
-
-
-
-
