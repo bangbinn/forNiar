@@ -18,60 +18,16 @@
       align-items: center;
       height: 100vh;
       overflow: hidden;
+      text-align: center;
     }
 
     .container {
-      position: relative;
       width: 380px;
-      height: 380px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
+      padding: 30px;
       border-radius: 24px;
       box-shadow: 0 15px 35px rgba(0,0,0,0.12);
-      background: transparent;
-    }
-
-    .card {
-      position: absolute;
-      width: 320px;
-      height: 320px;
-      left: 50%;
-      top: 50%;
-      transform: translate(-50%, 120%);
-      transition: transform 0.6s ease;
-      border-radius: 28px;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      padding: 26px;
-      text-align: center;
       background: linear-gradient(180deg, #fff, #ffe6f7);
       border: 3px dashed #ff7bbf;
-      box-shadow: 0 8px 20px rgba(0,0,0,0.08);
-    }
-
-    .card.active {
-      transform: translate(-50%, -50%);
-    }
-
-    .card::before {
-      content: "✨✨";
-      position: absolute;
-      top: 14px;
-      left: 14px;
-      font-size: 18px;
-      color: #ff66a3;
-    }
-
-    .card::after {
-      content: "✨✨";
-      position: absolute;
-      bottom: 14px;
-      right: 14px;
-      font-size: 18px;
-      color: #ff66a3;
     }
 
     h2 {
@@ -118,45 +74,42 @@
   <canvas id="confettiCanvas"></canvas>
 
   <div class="container">
-    <div class="card active">
-      <h2>🎀 Selamat Ulang Tahun 🎀</h2>
-      <p>Semoga harimu penuh warna pastel, tawa manis, dan vibes estetik ala Gen Z 💕</p>
-      <button onclick="nextCard()">Next ➜</button>
-    </div>
-    <div class="card">
-      <h2>🌸 Harapan Manis 🌸</h2>
-      <p>Semoga semua impianmu jadi nyata, kayak aesthetic feed IG yang goals banget ✨</p>
-      <button onclick="nextCard()">Next ➜</button>
-    </div>
-    <div class="card">
-      <h2>💖 Stay Happy 💖</h2>
-      <p>Jangan lupa self-love & healing vibes setiap hari, kamu deserve yang terbaik 💫</p>
-      <button onclick="nextCard()">Next ➜</button>
-    </div>
-    <div class="card">
-      <h2>✨ Glow Up ✨</h2>
-      <p>Semoga tahun ini penuh dengan glow up, cinta, dan petualangan seru 🌈</p>
-      <button onclick="startCelebration()">😭 Rayakan</button>
-      <button onclick="restart()">🔄 Ulangi Lagi</button>
+    <h2 id="title">🎀 Selamat Ulang Tahun 🎀</h2>
+    <p id="message">Semoga harimu penuh warna pastel, tawa manis, dan vibes estetik ala Gen Z 💕</p>
+    <div id="buttons">
+      <button onclick="nextPage(2)">Next ➜</button>
     </div>
   </div>
 
   <script>
-    let currentCard = 0;
-    const cards = document.querySelectorAll('.card');
-
-    function nextCard() {
-      if (currentCard < cards.length - 1) {
-        cards[currentCard].classList.remove('active');
-        currentCard++;
-        cards[currentCard].classList.add('active');
+    const pages = [
+      {
+        title: "🎀 Selamat Ulang Tahun 🎀",
+        message: "Semoga harimu penuh warna pastel, tawa manis, dan vibes estetik ala Gen Z 💕",
+        buttons: '<button onclick="nextPage(2)">Next ➜</button>'
+      },
+      {
+        title: "🌸 Harapan Manis 🌸",
+        message: "Semoga semua impianmu jadi nyata, kayak aesthetic feed IG yang goals banget ✨",
+        buttons: '<button onclick="nextPage(3)">Next ➜</button>'
+      },
+      {
+        title: "💖 Stay Happy 💖",
+        message: "Jangan lupa self-love & healing vibes setiap hari, kamu deserve yang terbaik 💫",
+        buttons: '<button onclick="nextPage(4)">Next ➜</button>'
+      },
+      {
+        title: "✨ Glow Up ✨",
+        message: "Semoga tahun ini penuh dengan glow up, cinta, dan petualangan seru 🌈",
+        buttons: '<button onclick="startCelebration()">😭 Rayakan</button> <button onclick="nextPage(1)">🔄 Ulangi Lagi</button>'
       }
-    }
+    ];
 
-    function restart() {
-      cards[currentCard].classList.remove('active');
-      currentCard = 0;
-      cards[currentCard].classList.add('active');
+    function nextPage(page) {
+      const data = pages[page-1];
+      document.getElementById('title').innerText = data.title;
+      document.getElementById('message').innerText = data.message;
+      document.getElementById('buttons').innerHTML = data.buttons;
     }
 
     // Confetti jadi emote 😭
