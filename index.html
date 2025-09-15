@@ -5,176 +5,100 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
   <title>Ucapan Ulang Tahun</title>
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: "Poppins", sans-serif;
-    }
-
-    html, body {
-      height: 100%;
-      -webkit-text-size-adjust: 100%;
-      touch-action: manipulation;
-    }
+    /* Reset & Base */
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: "Poppins", sans-serif; }
+    html, body { height: 100%; -webkit-text-size-adjust: 100%; touch-action: manipulation; }
 
     body {
       background: linear-gradient(135deg, #ffdde1, #ee9ca7);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      overflow: hidden;
-      text-align: center;
-      padding: 20px;
+      display: flex; justify-content: center; align-items: center;
+      height: 100vh; overflow: hidden; text-align: center; padding: 20px;
       position: relative;
     }
 
+    /* Container */
     .container {
-      width: 90%;
-      max-width: 600px;
-      min-height: 400px;
-      padding: 40px 30px 100px; 
-      border-radius: 20px;
+      width: 90%; max-width: 600px; min-height: 400px;
+      padding: 40px 30px 100px; border-radius: 20px;
       box-shadow: 0 15px 35px rgba(0,0,0,0.2);
       background: linear-gradient(180deg, #fff, #ffe6f7);
       border: 3px solid #ff7bbf;
-      opacity: 0;
-      transform: scale(0.9);
+      opacity: 0; transform: scale(0.9);
       animation: fadeScaleIn 0.6s ease forwards;
-      display: flex;
-      flex-direction: column;
-      justify-content: flex-start;
-      position: relative;
-      z-index: 1;
+      display: flex; flex-direction: column; justify-content: flex-start;
+      position: relative; z-index: 1;
     }
 
-    @keyframes fadeScaleIn {
-      from { opacity: 0; transform: scale(0.9); }
-      to { opacity: 1; transform: scale(1); }
-    }
+    /* Animations */
+    @keyframes fadeScaleIn { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
+    @keyframes fadeOut { from { opacity: 1; transform: scale(1); } to { opacity: 0; transform: scale(0.9); } }
 
-    @keyframes fadeOut {
-      from { opacity: 1; transform: scale(1); }
-      to { opacity: 0; transform: scale(0.9); }
-    }
+    /* Text */
+    h2 { font-size: clamp(26px, 5vw, 38px); margin-bottom: 20px; color: #ff4d88; text-shadow: 1px 1px 2px rgba(0,0,0,0.1); }
+    p { font-size: clamp(18px, 4vw, 22px); margin-bottom: 30px; color: #444; line-height: 1.6; }
 
-    h2 {
-      font-size: clamp(26px, 5vw, 38px);
-      margin-bottom: 20px;
-      color: #ff4d88;
-      text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
-    }
-
-    p {
-      font-size: clamp(18px, 4vw, 22px);
-      margin-bottom: 30px;
-      color: #444;
-      line-height: 1.6;
-    }
-
-    #buttons {
-      position: absolute;
-      bottom: 30px;
-      left: 50%;
-      transform: translateX(-50%);
-    }
-
+    /* Buttons */
+    #buttons { position: absolute; bottom: 30px; left: 50%; transform: translateX(-50%); }
     button {
-      padding: 16px 36px;
-      border: none;
-      border-radius: 12px;
+      padding: 16px 36px; border: none; border-radius: 12px;
       background: linear-gradient(135deg, #ff7bbf, #ff4d88);
-      color: white;
-      cursor: pointer;
-      font-size: 16px;
-      font-weight: 600;
-      transition: 0.25s;
-      box-shadow: 0 6px 14px rgba(255,77,136,0.25);
-      margin: 10px;
-      touch-action: manipulation;
+      color: white; cursor: pointer; font-size: 16px; font-weight: 600;
+      transition: 0.25s; box-shadow: 0 6px 14px rgba(255,77,136,0.25);
+      margin: 10px; touch-action: manipulation;
     }
-
     button:hover { transform: translateY(-3px); }
 
-    canvas {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      pointer-events: none;
-      z-index: 2;
-    }
+    /* Canvas Confetti */
+    canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 2; }
 
-    .chibi-anim {
+    /* Chibi Animation */
+    .chibi-anim { position: absolute; bottom: 10px; right: 10px; width: 120px; height: auto; z-index: 3; transition: transform 0.6s ease; }
+    .chibi-move { transform: translateY(-30px) rotate(10deg) scale(1.1); }
+
+    /* Tambahan gambar card pertama */
+    .extra-img {
       position: absolute;
       bottom: 10px;
       right: 10px;
-      width: 120px;
+      width: 100px;
       height: auto;
-      z-index: 3;
-      transition: transform 0.6s ease;
+      z-index: 2;
     }
 
-    .chibi-move {
-      transform: translateY(-30px) rotate(10deg) scale(1.1);
-    }
-
+    /* Responsive */
     @media (max-width: 480px) {
-      .container {
-        max-width: 95%;
-        min-height: 360px;
-        padding: 30px 20px 80px;
-        border-radius: 18px;
-      }
-
-      h2 { font-size: 24px; }
-      p { font-size: 16px; }
+      .container { max-width: 95%; min-height: 360px; padding: 30px 20px 80px; border-radius: 18px; }
+      h2 { font-size: 24px; } p { font-size: 16px; }
       button { padding: 14px 24px; font-size: 14px; }
       .chibi-anim { width: 90px; }
+      .extra-img { width: 70px; }
     }
   </style>
 </head>
 <body>
   <canvas id="confettiCanvas"></canvas>
-
   <div class="container" id="card">
     <h2 id="title">🎀 Selamat Ulang Tahun 🎀</h2>
     <p id="message">Semoga harimu penuh warna pastel, tawa manis, dan vibes estetik ala Gen Z 💕</p>
     <div id="buttons">
       <button onclick="nextPage(2)">Next ➜</button>
     </div>
-    <!-- Animasi chibi di card terakhir -->
+    <!-- Tambahan gambar di card pertama -->
+    <img src="https://ibb.co.com/TxCNQLbG" alt="Gambar Ekstra" class="extra-img" id="extraImg">
+
     <img src="https://i.ibb.co.com/jP1tQGp6/chibi.gif" alt="Chibi Animasi" class="chibi-anim" id="chibiAnim" style="display:none;">
   </div>
 
   <script>
     const card = document.getElementById('card');
     const chibiAnim = document.getElementById('chibiAnim');
+    const extraImg = document.getElementById('extraImg');
 
     const pages = [
-      {
-        title: "🎀 Selamat Ulang Tahun 🎀",
-        message: "Semoga harimu penuh warna pastel, tawa manis, dan vibes estetik ala Gen Z 💕",
-        buttons: '<button onclick="nextPage(2)">Next ➜</button>'
-      },
-      {
-        title: "🌸 Harapan Manis 🌸",
-        message: "Semoga semua impianmu jadi nyata, kayak aesthetic feed IG yang goals banget ✨",
-        buttons: '<button onclick="nextPage(3)">Next ➜</button>'
-      },
-      {
-        title: "💖 Stay Happy 💖",
-        message: "Jangan lupa self-love & healing vibes setiap hari, kamu deserve yang terbaik 💫",
-        buttons: '<button onclick="nextPage(4)">Next ➜</button>'
-      },
-      {
-        title: "✨ Glow Up ✨",
-        message: "Semoga tahun ini penuh dengan glow up, cinta, dan petualangan seru 🌈",
-        buttons: '<button onclick="startCelebration()">😭 Rayakan</button> <button onclick="nextPage(1)">🔄 Ulangi Lagi</button>',
-        showChibi: true
-      }
+      { title: "🎀 Selamat Ulang Tahun 🎀", message: "Semoga harimu penuh warna pastel, tawa manis, dan vibes estetik ala Gen Z 💕", buttons: '<button onclick="nextPage(2)">Next ➜</button>', showExtra: true },
+      { title: "🌸 Harapan Manis 🌸", message: "Semoga semua impianmu jadi nyata, kayak aesthetic feed IG yang goals banget ✨", buttons: '<button onclick="nextPage(3)">Next ➜</button>' },
+      { title: "💖 Stay Happy 💖", message: "Jangan lupa self-love & healing vibes setiap hari, kamu deserve yang terbaik 💫", buttons: '<button onclick="nextPage(4)">Next ➜</button>' },
+      { title: "✨ Glow Up ✨", message: "Semoga tahun ini penuh dengan glow up, cinta, dan petualangan seru 🌈", buttons: '<button onclick="startCelebration()">😭 Rayakan</button> <button onclick="nextPage(1)">🔄 Ulangi Lagi</button>', showChibi: true }
     ];
 
     function nextPage(page) {
@@ -185,101 +109,48 @@
         document.getElementById('message').innerText = data.message;
         document.getElementById('buttons').innerHTML = data.buttons;
         card.style.animation = 'fadeScaleIn 0.6s ease forwards';
-
-        // Tampilkan animasi chibi hanya di card terakhir
-        if (data.showChibi) {
-          chibiAnim.style.display = 'block';
-        } else {
-          chibiAnim.style.display = 'none';
-        }
+        chibiAnim.style.display = data.showChibi ? 'block' : 'none';
+        extraImg.style.display = data.showExtra ? 'block' : 'none';
       }, 400);
     }
 
     const canvas = document.getElementById('confettiCanvas');
     const ctx = canvas.getContext('2d');
-    let particles = [];
-    let sideBursts = [];
-    let animationFrameId;
+    let particles = [], sideBursts = [], animationFrameId;
 
-    function resizeCanvas() {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
-    }
-    window.addEventListener('resize', resizeCanvas);
-    resizeCanvas();
-
-    function random(min, max) {
-      return Math.random() * (max - min) + min;
-    }
+    function resizeCanvas() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+    window.addEventListener('resize', resizeCanvas); resizeCanvas();
+    function random(min, max) { return Math.random() * (max - min) + min; }
 
     function createTopConfetti() {
       for (let i = 0; i < 100; i++) {
-        particles.push({
-          x: random(0, canvas.width),
-          y: -20,
-          size: random(16, 28),
-          speedY: random(2, 4),
-          text: "😭",
-          opacity: 1
-        });
+        particles.push({ x: random(0, canvas.width), y: -20, size: random(16, 28), speedY: random(2, 4), text: "😭", opacity: 1 });
       }
     }
 
     function createSideBursts() {
       const colors = ["#ff4d88", "#ffcc00", "#66ccff", "#77dd77", "#ff7bbf"];
-      for (let i = 0; i < 150; i++) { // ditambah dari 80 ke 150
+      for (let i = 0; i < 150; i++) {
         const fromLeft = Math.random() < 0.5;
-        sideBursts.push({
-          x: fromLeft ? -20 : canvas.width+20,
-          y: random(canvas.height/4, (3*canvas.height)/4),
-          size: random(6, 12),
-          speedX: fromLeft ? random(5,9) : -random(5,9),
-          speedY: random(-2,2),
-          color: colors[Math.floor(Math.random()*colors.length)],
-          opacity: 1
-        });
+        sideBursts.push({ x: fromLeft ? -20 : canvas.width+20, y: random(canvas.height/4, (3*canvas.height)/4), size: random(6, 12), speedX: fromLeft ? random(5,9) : -random(5,9), speedY: random(-2,2), color: colors[Math.floor(Math.random()*colors.length)], opacity: 1 });
       }
     }
 
     function drawParticles() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-      for (let p of particles) {
-        ctx.globalAlpha = p.opacity;
-        ctx.font = "24px Poppins";
-        ctx.fillText(p.text, p.x, p.y);
-        p.y += p.speedY;
-        p.opacity -= 0.004;
-      }
-
-      for (let s of sideBursts) {
-        ctx.globalAlpha = s.opacity;
-        ctx.fillStyle = s.color;
-        ctx.fillRect(s.x, s.y, s.size, s.size);
-        s.x += s.speedX;
-        s.y += s.speedY;
-        s.opacity -= 0.01;
-      }
-
+      for (let p of particles) { ctx.globalAlpha = p.opacity; ctx.font = "24px Poppins"; ctx.fillText(p.text, p.x, p.y); p.y += p.speedY; p.opacity -= 0.004; }
+      for (let s of sideBursts) { ctx.globalAlpha = s.opacity; ctx.fillStyle = s.color; ctx.fillRect(s.x, s.y, s.size, s.size); s.x += s.speedX; s.y += s.speedY; s.opacity -= 0.01; }
       ctx.globalAlpha = 1;
-
       particles = particles.filter(p => p.opacity > 0 && p.y < canvas.height+50);
       sideBursts = sideBursts.filter(s => s.opacity > 0 && s.x > -50 && s.x < canvas.width+50);
-
-      if (particles.length > 0 || sideBursts.length > 0) {
-        animationFrameId = requestAnimationFrame(drawParticles);
-      }
+      if (particles.length > 0 || sideBursts.length > 0) animationFrameId = requestAnimationFrame(drawParticles);
     }
 
     function startCelebration() {
-      particles = [];
-      sideBursts = [];
-      createTopConfetti();
-      createSideBursts();
+      particles = []; sideBursts = [];
+      createTopConfetti(); createSideBursts();
       cancelAnimationFrame(animationFrameId);
       drawParticles();
-
-      // Animasi chibi bergerak
       if (chibiAnim.style.display === 'block') {
         chibiAnim.classList.add('chibi-move');
         setTimeout(() => chibiAnim.classList.remove('chibi-move'), 600);
