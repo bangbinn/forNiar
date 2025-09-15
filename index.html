@@ -23,41 +23,52 @@
     }
 
     .container {
-      width: 100%;
-      max-width: 420px;
-      padding: 30px;
-      border-radius: 24px;
-      box-shadow: 0 15px 35px rgba(0,0,0,0.12);
+      width: 90%;
+      max-width: 550px;
+      min-height: 280px;
+      padding: 40px;
+      border-radius: 28px;
+      box-shadow: 0 18px 40px rgba(0,0,0,0.15);
       background: linear-gradient(180deg, #fff, #ffe6f7);
       border: 3px dashed #ff7bbf;
+      opacity: 0;
+      transform: scale(0.8);
+      animation: scaleIn 0.6s ease forwards;
+    }
+
+    @keyframes scaleIn {
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
     }
 
     h2 {
-      font-size: clamp(18px, 5vw, 24px);
-      margin-bottom: 12px;
+      font-size: clamp(20px, 6vw, 28px);
+      margin-bottom: 16px;
       color: #ff4d88;
       text-shadow: 1px 1px 2px rgba(0,0,0,0.06);
     }
 
     p {
-      font-size: clamp(14px, 4vw, 16px);
-      margin-bottom: 20px;
+      font-size: clamp(16px, 4.5vw, 18px);
+      margin-bottom: 24px;
       color: #444;
-      line-height: 1.45;
+      line-height: 1.5;
     }
 
     button {
-      padding: 10px 20px;
+      padding: 12px 26px;
       border: none;
       border-radius: 999px;
       background: linear-gradient(135deg, #ff7bbf, #ff4d88);
       color: white;
       cursor: pointer;
-      font-size: 14px;
+      font-size: 15px;
       font-weight: 600;
       transition: 0.25s;
       box-shadow: 0 6px 14px rgba(255,77,136,0.22);
-      margin: 5px;
+      margin: 6px;
     }
 
     button:hover { transform: translateY(-3px); }
@@ -75,7 +86,7 @@
 <body>
   <canvas id="confettiCanvas"></canvas>
 
-  <div class="container">
+  <div class="container" id="card">
     <h2 id="title">🎀 Selamat Ulang Tahun 🎀</h2>
     <p id="message">Semoga harimu penuh warna pastel, tawa manis, dan vibes estetik ala Gen Z 💕</p>
     <div id="buttons">
@@ -84,6 +95,8 @@
   </div>
 
   <script>
+    const card = document.getElementById('card');
+
     const pages = [
       {
         title: "🎀 Selamat Ulang Tahun 🎀",
@@ -109,9 +122,12 @@
 
     function nextPage(page) {
       const data = pages[page-1];
+      card.style.animation = 'none';
+      void card.offsetWidth; // reset animation
       document.getElementById('title').innerText = data.title;
       document.getElementById('message').innerText = data.message;
       document.getElementById('buttons').innerHTML = data.buttons;
+      card.style.animation = 'scaleIn 0.6s ease forwards';
     }
 
     // Confetti jadi emote 😭
@@ -135,7 +151,7 @@
         particles.push({
           x: random(0, canvas.width),
           y: random(-canvas.height, 0),
-          size: random(18, 28),
+          size: random(20, 32),
           speedY: random(2, 5),
           text: "😭"
         });
@@ -144,7 +160,7 @@
 
     function drawParticles() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-      ctx.font = "20px Poppins";
+      ctx.font = "24px Poppins";
       for (let p of particles) {
         ctx.fillText(p.text, p.x, p.y);
         p.y += p.speedY;
