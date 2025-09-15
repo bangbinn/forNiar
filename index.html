@@ -143,7 +143,6 @@
     <div id="buttons">
       <button onclick="nextPage(2)">Next ➜</button>
     </div>
-    <img id="chibi" class="chibi" src="https://www.kindpng.com/picc/m/787-7879757_cute-tanjiro-chibi-hd-png-download.png" style="display:none;" alt="Chibi Demon Slayer">
   </div>
 
   <script>
@@ -184,11 +183,6 @@
         document.getElementById('title').innerText = data.title;
         document.getElementById('message').innerText = data.message;
         document.getElementById('buttons').innerHTML = data.buttons;
-        if(data.showChibi){
-          chibi.style.display = 'block';
-        } else {
-          chibi.style.display = 'none';
-        }
         card.style.animation = 'fadeScaleIn 0.6s ease forwards';
       }, 400);
     }
@@ -196,6 +190,7 @@
     const canvas = document.getElementById('confettiCanvas');
     const ctx = canvas.getContext('2d');
     let particles = [];
+    let sideBursts = [];
     let animationFrameId;
 
     function resizeCanvas() {
@@ -209,15 +204,32 @@
       return Math.random() * (max - min) + min;
     }
 
-    function createParticles() {
-      particles = [];
+    // confetti jatuh dari atas (emoji 😭)
+    function createTopConfetti() {
       for (let i = 0; i < 100; i++) {
         particles.push({
           x: random(0, canvas.width),
-          y: random(-canvas.height, 0),
-          size: random(20, 32),
-          speedY: random(2, 5),
+          y: -20,
+          size: random(16, 28),
+          speedY: random(2, 4),
           text: "😭",
+          opacity: 1
+        });
+      }
+    }
+
+    // confetti meledak dari samping (warna-warni persegi kecil)
+    function createSideBursts() {
+      const colors = ["#ff4d88", "#ffcc00", "#66ccff", "#77dd77", "#ff7bbf"];
+      for (let i = 0; i < 80; i++) {
+        const fromLeft = Math.random() < 0.5;
+        sideBursts.push({
+          x: fromLeft ? 0 : canvas.width,
+          y: random(canvas.height/4, (3*canvas.height)/4),
+          size: random(6, 12),
+          speedX: fromLeft ? random(3,6) : -random(3,6),
+          speedY: random(-2,2),
+          color: colors[Math.floor(Math.random()*colors.length)],
           opacity: 1
         });
       }
@@ -225,32 +237,43 @@
 
     function drawParticles() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-      ctx.font = "24px Poppins";
-      let allOffScreen = true;
+
+      // atas
       for (let p of particles) {
         ctx.globalAlpha = p.opacity;
+        ctx.font = "24px Poppins";
         ctx.fillText(p.text, p.x, p.y);
         p.y += p.speedY;
-        p.opacity -= 0.01; // fade out perlahan
-        if (p.y < canvas.height && p.opacity > 0) {
-          allOffScreen = false;
-        }
+        p.opacity -= 0.004;
       }
-      ctx.globalAlpha = 1;
-      return allOffScreen;
-    }
 
-    function animateOnce() {
-      const done = drawParticles();
-      if (!done) {
-        animationFrameId = requestAnimationFrame(animateOnce);
+      // samping
+      for (let s of sideBursts) {
+        ctx.globalAlpha = s.opacity;
+        ctx.fillStyle = s.color;
+        ctx.fillRect(s.x, s.y, s.size, s.size);
+        s.x += s.speedX;
+        s.y += s.speedY;
+        s.opacity -= 0.01;
+      }
+
+      ctx.globalAlpha = 1;
+
+      particles = particles.filter(p => p.opacity > 0 && p.y < canvas.height+50);
+      sideBursts = sideBursts.filter(s => s.opacity > 0 && s.x > -50 && s.x < canvas.width+50);
+
+      if (particles.length > 0 || sideBursts.length > 0) {
+        animationFrameId = requestAnimationFrame(drawParticles);
       }
     }
 
     function startCelebration() {
-      createParticles();
+      particles = [];
+      sideBursts = [];
+      createTopConfetti();
+      createSideBursts();
       cancelAnimationFrame(animationFrameId);
-      animateOnce();
+      drawParticles();
     }
   </script>
 </body>
