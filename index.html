@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"> <!-- mencegah zoom -->
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
   <title>Ucapan Ulang Tahun</title>
   <style>
     * {
@@ -14,8 +14,8 @@
 
     html, body {
       height: 100%;
-      -webkit-text-size-adjust: 100%; /* jangan ubah ukuran teks otomatis */
-      touch-action: manipulation; /* membantu mencegah zoom double-tap di beberapa perangkat */
+      -webkit-text-size-adjust: 100%;
+      touch-action: manipulation;
     }
 
     body {
@@ -27,57 +27,71 @@
       overflow: hidden;
       text-align: center;
       padding: 20px;
+      position: relative;
     }
 
-    /* container dibuat lebih besar di mobile tapi tetap proporsional di desktop */
     .container {
-      width: 94%;
-      max-width: 720px; /* diperbesar agar terlihat besar di device lain */
-      min-height: 360px; /* dibuat lebih tinggi supaya terlihat "besar" di HP */
-      padding: 44px;
-      border-radius: 28px;
-      box-shadow: 0 18px 40px rgba(0,0,0,0.15);
+      width: 90%;
+      max-width: 600px;
+      min-height: 400px;
+      padding: 40px 30px 100px; 
+      border-radius: 20px;
+      box-shadow: 0 15px 35px rgba(0,0,0,0.2);
       background: linear-gradient(180deg, #fff, #ffe6f7);
-      border: 3px dashed #ff7bbf;
+      border: 3px solid #ff7bbf;
       opacity: 0;
-      transform: scale(0.85);
-      animation: scaleIn 0.6s ease forwards;
+      transform: scale(0.9);
+      animation: fadeScaleIn 0.6s ease forwards;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      position: relative;
     }
 
-    @keyframes scaleIn {
-      to {
-        opacity: 1;
-        transform: scale(1);
-      }
+    @keyframes fadeScaleIn {
+      from { opacity: 0; transform: scale(0.9); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    @keyframes fadeOut {
+      from { opacity: 1; transform: scale(1); }
+      to { opacity: 0; transform: scale(0.9); }
     }
 
     h2 {
-      font-size: clamp(22px, 7vw, 32px);
-      margin-bottom: 16px;
+      font-size: clamp(26px, 5vw, 38px);
+      margin-bottom: 20px;
       color: #ff4d88;
-      text-shadow: 1px 1px 2px rgba(0,0,0,0.06);
+      text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
     }
 
     p {
-      font-size: clamp(16px, 4.5vw, 20px);
-      margin-bottom: 24px;
+      font-size: clamp(18px, 4vw, 22px);
+      margin-bottom: 30px;
       color: #444;
-      line-height: 1.5;
+      line-height: 1.6;
+    }
+
+    #buttons {
+      position: absolute;
+      bottom: 30px;
+      left: 50%;
+      transform: translateX(-50%);
     }
 
     button {
-      padding: 14px 30px;
+      padding: 16px 36px;
       border: none;
-      border-radius: 999px;
+      border-radius: 12px;
       background: linear-gradient(135deg, #ff7bbf, #ff4d88);
       color: white;
       cursor: pointer;
       font-size: 16px;
       font-weight: 600;
       transition: 0.25s;
-      box-shadow: 0 6px 14px rgba(255,77,136,0.22);
-      margin: 8px;
-      touch-action: manipulation; /* memastikan tombol responsif pada sentuhan */
+      box-shadow: 0 6px 14px rgba(255,77,136,0.25);
+      margin: 10px;
+      touch-action: manipulation;
     }
 
     button:hover { transform: translateY(-3px); }
@@ -91,17 +105,34 @@
       pointer-events: none;
     }
 
-    /* Khusus layar kecil: perbesar tampilan, ruang, dan font agar terasa besar di HP */
+    /* Chibi Demon Slayer */
+    .chibi {
+      position: absolute;
+      bottom: 10px;
+      right: 10px;
+      width: 100px;
+      animation: wave 2s infinite ease-in-out;
+      pointer-events: none;
+    }
+
+    @keyframes wave {
+      0%, 100% { transform: rotate(0deg) translateY(0); }
+      25% { transform: rotate(5deg) translateY(-5px); }
+      75% { transform: rotate(-5deg) translateY(-5px); }
+    }
+
     @media (max-width: 480px) {
       .container {
-        padding: 48px 34px;
-        min-height: 420px;
-        border-radius: 22px;
+        max-width: 95%;
+        min-height: 360px;
+        padding: 30px 20px 80px;
+        border-radius: 18px;
       }
 
-      h2 { font-size: 26px; }
-      p { font-size: 18px; }
-      button { padding: 16px 34px; font-size: 17px; }
+      h2 { font-size: 24px; }
+      p { font-size: 16px; }
+      button { padding: 14px 24px; font-size: 14px; }
+      .chibi { width: 80px; }
     }
   </style>
 </head>
@@ -114,45 +145,59 @@
     <div id="buttons">
       <button onclick="nextPage(2)">Next ➜</button>
     </div>
+    <img id="chibi" src="https://media.tenor.com/q-tqxfj0agAAAAAi/nezuko-demon-slayer.gif" alt="Chibi Demon Slayer" class="chibi">
   </div>
 
   <script>
     const card = document.getElementById('card');
+    const chibi = document.getElementById('chibi');
+
+    const chibiList = [
+      "https://media.tenor.com/q-tqxfj0agAAAAAi/nezuko-demon-slayer.gif",
+      "https://media.tenor.com/9G7z9KQ6G9YAAAAC/tanjiro-kamado.gif",
+      "https://media.tenor.com/IVeAaJ35wKwAAAAC/zenitsu-agatsuma.gif",
+      "https://media.tenor.com/PoP0Qw8pRgUAAAAC/inosuke-demon-slayer.gif"
+    ];
 
     const pages = [
       {
         title: "🎀 Selamat Ulang Tahun 🎀",
         message: "Semoga harimu penuh warna pastel, tawa manis, dan vibes estetik ala Gen Z 💕",
-        buttons: '<button onclick="nextPage(2)">Next ➜</button>'
+        buttons: '<button onclick="nextPage(2)">Next ➜</button>',
+        chibi: chibiList[0]
       },
       {
         title: "🌸 Harapan Manis 🌸",
         message: "Semoga semua impianmu jadi nyata, kayak aesthetic feed IG yang goals banget ✨",
-        buttons: '<button onclick="nextPage(3)">Next ➜</button>'
+        buttons: '<button onclick="nextPage(3)">Next ➜</button>',
+        chibi: chibiList[1]
       },
       {
         title: "💖 Stay Happy 💖",
         message: "Jangan lupa self-love & healing vibes setiap hari, kamu deserve yang terbaik 💫",
-        buttons: '<button onclick="nextPage(4)">Next ➜</button>'
+        buttons: '<button onclick="nextPage(4)">Next ➜</button>',
+        chibi: chibiList[2]
       },
       {
         title: "✨ Glow Up ✨",
         message: "Semoga tahun ini penuh dengan glow up, cinta, dan petualangan seru 🌈",
-        buttons: '<button onclick="nextPage(1)">🔄 Ulangi Lagi</button> <button onclick="startCelebration()">😭 Rayakan</button>'
+        buttons: '<button onclick="nextPage(1)">🔄 Ulangi Lagi</button> <button onclick="startCelebration()">😭 Rayakan</button>',
+        chibi: chibiList[3]
       }
     ];
 
     function nextPage(page) {
-      const data = pages[page-1];
-      card.style.animation = 'none';
-      void card.offsetWidth; // reset animation
-      document.getElementById('title').innerText = data.title;
-      document.getElementById('message').innerText = data.message;
-      document.getElementById('buttons').innerHTML = data.buttons;
-      card.style.animation = 'scaleIn 0.6s ease forwards';
+      card.style.animation = 'fadeOut 0.4s ease forwards';
+      setTimeout(() => {
+        const data = pages[page-1];
+        document.getElementById('title').innerText = data.title;
+        document.getElementById('message').innerText = data.message;
+        document.getElementById('buttons').innerHTML = data.buttons;
+        chibi.src = data.chibi;
+        card.style.animation = 'fadeScaleIn 0.6s ease forwards';
+      }, 400);
     }
 
-    // Confetti jadi emote 😭
     const canvas = document.getElementById('confettiCanvas');
     const ctx = canvas.getContext('2d');
     let particles = [];
