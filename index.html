@@ -105,20 +105,18 @@
       pointer-events: none;
     }
 
-    /* Chibi Demon Slayer */
     .chibi {
       position: absolute;
       bottom: 10px;
       right: 10px;
-      width: 100px;
-      animation: wave 2s infinite ease-in-out;
-      pointer-events: none;
+      width: 80px;
+      height: auto;
+      animation: bounce 1.5s infinite ease-in-out;
     }
 
-    @keyframes wave {
-      0%, 100% { transform: rotate(0deg) translateY(0); }
-      25% { transform: rotate(5deg) translateY(-5px); }
-      75% { transform: rotate(-5deg) translateY(-5px); }
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
     }
 
     @media (max-width: 480px) {
@@ -132,7 +130,7 @@
       h2 { font-size: 24px; }
       p { font-size: 16px; }
       button { padding: 14px 24px; font-size: 14px; }
-      .chibi { width: 80px; }
+      .chibi { width: 60px; }
     }
   </style>
 </head>
@@ -145,44 +143,37 @@
     <div id="buttons">
       <button onclick="nextPage(2)">Next ➜</button>
     </div>
-    <img id="chibi" src="https://media.tenor.com/q-tqxfj0agAAAAAi/nezuko-demon-slayer.gif" alt="Chibi Demon Slayer" class="chibi">
+    <img id="chibi" class="chibi" src="https://i.ibb.co/VCTH7Fj/chibi-demonslayer.png" style="display:none;" alt="Chibi Demon Slayer">
   </div>
 
   <script>
     const card = document.getElementById('card');
     const chibi = document.getElementById('chibi');
 
-    const chibiList = [
-      "https://media.tenor.com/q-tqxfj0agAAAAAi/nezuko-demon-slayer.gif",
-      "https://media.tenor.com/9G7z9KQ6G9YAAAAC/tanjiro-kamado.gif",
-      "https://media.tenor.com/IVeAaJ35wKwAAAAC/zenitsu-agatsuma.gif",
-      "https://media.tenor.com/PoP0Qw8pRgUAAAAC/inosuke-demon-slayer.gif"
-    ];
-
     const pages = [
       {
         title: "🎀 Selamat Ulang Tahun 🎀",
         message: "Semoga harimu penuh warna pastel, tawa manis, dan vibes estetik ala Gen Z 💕",
         buttons: '<button onclick="nextPage(2)">Next ➜</button>',
-        chibi: chibiList[0]
+        showChibi: false
       },
       {
         title: "🌸 Harapan Manis 🌸",
         message: "Semoga semua impianmu jadi nyata, kayak aesthetic feed IG yang goals banget ✨",
         buttons: '<button onclick="nextPage(3)">Next ➜</button>',
-        chibi: chibiList[1]
+        showChibi: false
       },
       {
         title: "💖 Stay Happy 💖",
         message: "Jangan lupa self-love & healing vibes setiap hari, kamu deserve yang terbaik 💫",
         buttons: '<button onclick="nextPage(4)">Next ➜</button>',
-        chibi: chibiList[2]
+        showChibi: false
       },
       {
         title: "✨ Glow Up ✨",
         message: "Semoga tahun ini penuh dengan glow up, cinta, dan petualangan seru 🌈",
-        buttons: '<button onclick="nextPage(1)">🔄 Ulangi Lagi</button> <button onclick="startCelebration()">😭 Rayakan</button>',
-        chibi: chibiList[3]
+        buttons: '<button onclick="startCelebration()">😭 Rayakan</button> <button onclick="nextPage(1)">🔄 Ulangi Lagi</button>',
+        showChibi: true
       }
     ];
 
@@ -193,7 +184,11 @@
         document.getElementById('title').innerText = data.title;
         document.getElementById('message').innerText = data.message;
         document.getElementById('buttons').innerHTML = data.buttons;
-        chibi.src = data.chibi;
+        if(data.showChibi){
+          chibi.style.display = 'block';
+        } else {
+          chibi.style.display = 'none';
+        }
         card.style.animation = 'fadeScaleIn 0.6s ease forwards';
       }, 400);
     }
@@ -201,6 +196,7 @@
     const canvas = document.getElementById('confettiCanvas');
     const ctx = canvas.getContext('2d');
     let particles = [];
+    let animationFrameId;
 
     function resizeCanvas() {
       canvas.width = window.innerWidth;
@@ -214,13 +210,15 @@
     }
 
     function createParticles() {
+      particles = [];
       for (let i = 0; i < 100; i++) {
         particles.push({
           x: random(0, canvas.width),
           y: random(-canvas.height, 0),
           size: random(20, 32),
           speedY: random(2, 5),
-          text: "😭"
+          text: "😭",
+          opacity: 1
         });
       }
     }
@@ -228,25 +226,31 @@
     function drawParticles() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       ctx.font = "24px Poppins";
+      let allOffScreen = true;
       for (let p of particles) {
+        ctx.globalAlpha = p.opacity;
         ctx.fillText(p.text, p.x, p.y);
         p.y += p.speedY;
-        if (p.y > canvas.height) {
-          p.y = random(-20, 0);
-          p.x = random(0, canvas.width);
+        p.opacity -= 0.01; // fade out perlahan
+        if (p.y < canvas.height && p.opacity > 0) {
+          allOffScreen = false;
         }
+      }
+      ctx.globalAlpha = 1;
+      return allOffScreen;
+    }
+
+    function animateOnce() {
+      const done = drawParticles();
+      if (!done) {
+        animationFrameId = requestAnimationFrame(animateOnce);
       }
     }
 
-    function animate() {
-      drawParticles();
-      requestAnimationFrame(animate);
-    }
-
     function startCelebration() {
-      particles = [];
       createParticles();
-      animate();
+      cancelAnimationFrame(animationFrameId);
+      animateOnce();
     }
   </script>
 </body>
