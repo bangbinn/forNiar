@@ -57,31 +57,14 @@
     .chibi-move { transform: translateY(-30px) rotate(10deg) scale(1.1); }
 
     /* Tambahan gambar */
-    .extra-img {
-      position: absolute;
-      bottom: 0;
-      right: 0;
-      width: 260px; /* diperbesar lagi */
-      height: auto;
-      z-index: 2;
-    }
-
     .extra-img-2 {
-      position: absolute;
-      bottom: 10px;
-      left: 10px;
-      width: 140px;
-      height: auto;
-      z-index: 2;
+      position: absolute; bottom: 10px; left: 10px; width: 140px; height: auto; z-index: 2; pointer-events: none;
     }
-
     .extra-img-3 {
-      position: absolute;
-      bottom: 0;
-      right: 0;
-      width: 220px; /* diperbesar */
-      height: auto;
-      z-index: 2;
+      position: absolute; bottom: 0; right: 20px; width: 220px; height: auto; z-index: 2; pointer-events: none;
+    }
+    .extra-img-4 {
+      position: absolute; bottom: 0; left: 10px; width: 180px; height: auto; z-index: 2; pointer-events: none;
     }
 
     /* Responsive */
@@ -90,9 +73,9 @@
       h2 { font-size: 24px; } p { font-size: 16px; }
       button { padding: 14px 24px; font-size: 14px; }
       .chibi-anim { width: 110px; }
-      .extra-img { width: 180px; bottom: 0; right: 0; }
       .extra-img-2 { width: 100px; }
-      .extra-img-3 { width: 160px; bottom: 0; right: 0; }
+      .extra-img-3 { width: 160px; bottom: 0; right: 15px; }
+      .extra-img-4 { width: 120px; bottom: 0; left: 5px; }
     }
   </style>
 </head>
@@ -104,14 +87,15 @@
     <div id="buttons">
       <button onclick="nextPage(2)">Next ➜</button>
     </div>
-    <!-- Tambahan gambar di card pertama -->
-    <img src="https://i.ibb.co/wDwfCpr/sample-image.png" alt="Gambar Ekstra" class="extra-img" id="extraImg">
 
     <!-- Tambahan gambar di card kedua -->
-    <img src="https://i.ibb.co/p6cJwdKr/sample-image2.png" alt="Gambar Ekstra 2" class="extra-img-2" id="extraImg2" style="display:none;">
+    <img src="https://i.ibb.co/p6cJwdKr/sample-image2.png" alt="Gambar Ekstra 2" class="extra-img-2" id="extraImg2" style="display:none;" referrerpolicy="no-referrer" loading="lazy">
 
-    <!-- Tambahan gambar di card ketiga -->
-    <img src="https://i.ibb.co/gbMZjSYB/sample-image3.png" alt="Gambar Ekstra 3" class="extra-img-3" id="extraImg3" style="display:none;">
+    <!-- Gambar card pertama (dulu card ke-3) -->
+    <img src="https://i.ibb.co/gbMZjSYB/sample-image3.png" alt="Gambar Ekstra 3" class="extra-img-3" id="extraImg3" style="display:block;" referrerpolicy="no-referrer" loading="lazy">
+
+    <!-- Gambar baru di card ke-3 -->
+    <img src="" data-ibb-id="4ZSjBB9b" alt="Gambar Ekstra 4" class="extra-img-4" id="extraImg4" style="display:none;" referrerpolicy="no-referrer" loading="lazy">
 
     <img src="https://i.ibb.co/jP1tQGp6/chibi.gif" alt="Chibi Animasi" class="chibi-anim" id="chibiAnim" style="display:none;">
   </div>
@@ -119,14 +103,14 @@
   <script>
     const card = document.getElementById('card');
     const chibiAnim = document.getElementById('chibiAnim');
-    const extraImg = document.getElementById('extraImg');
     const extraImg2 = document.getElementById('extraImg2');
     const extraImg3 = document.getElementById('extraImg3');
+    const extraImg4 = document.getElementById('extraImg4');
 
     const pages = [
-      { title: "🎀 Selamat Ulang Tahun 🎀", message: "Semoga harimu penuh warna pastel, tawa manis, dan vibes estetik ala Gen Z 💕", buttons: '<button onclick="nextPage(2)">Next ➜</button>', showExtra: true },
+      { title: "🎀 Selamat Ulang Tahun 🎀", message: "Semoga harimu penuh warna pastel, tawa manis, dan vibes estetik ala Gen Z 💕", buttons: '<button onclick="nextPage(2)">Next ➜</button>', showExtra3: true },
       { title: "🌸 Harapan Manis 🌸", message: "Semoga semua impianmu jadi nyata, kayak aesthetic feed IG yang goals banget ✨", buttons: '<button onclick="nextPage(3)">Next ➜</button>', showExtra2: true },
-      { title: "💖 Stay Happy 💖", message: "Jangan lupa self-love & healing vibes setiap hari, kamu deserve yang terbaik 💫", buttons: '<button onclick="nextPage(4)">Next ➜</button>', showExtra3: true },
+      { title: "💖 Stay Happy 💖", message: "Jangan lupa self-love & healing vibes setiap hari, kamu deserve yang terbaik 💫", buttons: '<button onclick="nextPage(4)">Next ➜</button>', showExtra4: true },
       { title: "✨ Glow Up ✨", message: "Semoga tahun ini penuh dengan glow up, cinta, dan petualangan seru 🌈", buttons: '<button onclick="startCelebration()">😭 Rayakan</button> <button onclick="nextPage(1)">🔄 Ulangi Lagi</button>', showChibi: true }
     ];
 
@@ -139,12 +123,47 @@
         document.getElementById('buttons').innerHTML = data.buttons;
         card.style.animation = 'fadeScaleIn 0.6s ease forwards';
         chibiAnim.style.display = data.showChibi ? 'block' : 'none';
-        extraImg.style.display = data.showExtra ? 'block' : 'none';
         extraImg2.style.display = data.showExtra2 ? 'block' : 'none';
         extraImg3.style.display = data.showExtra3 ? 'block' : 'none';
+        extraImg4.style.display = data.showExtra4 ? 'block' : 'none';
       }, 400);
     }
 
+    // ==== Perbaikan pemuatan gambar imgbb dengan hanya ID ====
+    // Beberapa link yang diberikan berupa halaman (ibb.co.com/ID). Kita coba resolve otomatis
+    // ke domain CDN (i.ibb.co/ID/<nama-bebas>.<ext>) dengan beberapa ekstensi umum.
+    function resolveImgbbById(imgEl, id) {
+      if (!imgEl) return;
+      const exts = ['png','jpg','jpeg','gif','webp'];
+      const names = ['image','img','photo','pic',id,'file'];
+      let i = 0;
+      function tryNext() {
+        if (i >= exts.length * names.length) {
+          console.warn('Gagal memuat dari i.ibb.co untuk ID:', id);
+          // Fallback placeholder agar layout tetap rapi
+          imgEl.src = 'data:image/svg+xml;utf8,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="180" height="120"><rect width="100%" height="100%" fill="#ffe6f7"/><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" fill="#ff4d88" font-family="Poppins, sans-serif" font-size="14">Gambar tidak ditemukan</text></svg>');
+          return;
+        }
+        const name = names[i % names.length];
+        const ext = exts[Math.floor(i / names.length) % exts.length];
+        const url = `https://i.ibb.co/${id}/${name}.${ext}`;
+        i++;
+        const test = new Image();
+        test.onload = () => { imgEl.src = url; };
+        test.onerror = tryNext;
+        test.referrerPolicy = 'no-referrer';
+        test.src = url;
+      }
+      tryNext();
+    }
+
+    // Jalankan saat DOM siap
+    document.addEventListener('DOMContentLoaded', () => {
+      const id = extraImg4.getAttribute('data-ibb-id');
+      if (id) resolveImgbbById(extraImg4, id);
+    });
+
+    // ==== Confetti ====
     const canvas = document.getElementById('confettiCanvas');
     const ctx = canvas.getContext('2d');
     let particles = [], sideBursts = [], animationFrameId;
