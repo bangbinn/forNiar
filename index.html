@@ -46,6 +46,7 @@
       flex-direction: column;
       justify-content: flex-start;
       position: relative;
+      z-index: 1;
     }
 
     @keyframes fadeScaleIn {
@@ -103,20 +104,21 @@
       width: 100%;
       height: 100%;
       pointer-events: none;
+      z-index: 2;
     }
 
-    .chibi {
+    .chibi-anim {
       position: absolute;
       bottom: 10px;
       right: 10px;
-      width: 80px;
+      width: 120px;
       height: auto;
-      animation: bounce 1.5s infinite ease-in-out;
+      z-index: 3;
+      transition: transform 0.6s ease;
     }
 
-    @keyframes bounce {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-10px); }
+    .chibi-move {
+      transform: translateY(-30px) rotate(10deg) scale(1.1);
     }
 
     @media (max-width: 480px) {
@@ -130,7 +132,7 @@
       h2 { font-size: 24px; }
       p { font-size: 16px; }
       button { padding: 14px 24px; font-size: 14px; }
-      .chibi { width: 60px; }
+      .chibi-anim { width: 90px; }
     }
   </style>
 </head>
@@ -143,30 +145,29 @@
     <div id="buttons">
       <button onclick="nextPage(2)">Next ➜</button>
     </div>
+    <!-- Animasi chibi di card terakhir -->
+    <img src="https://i.ibb.co.com/jP1tQGp6/chibi.gif" alt="Chibi Animasi" class="chibi-anim" id="chibiAnim" style="display:none;">
   </div>
 
   <script>
     const card = document.getElementById('card');
-    const chibi = document.getElementById('chibi');
+    const chibiAnim = document.getElementById('chibiAnim');
 
     const pages = [
       {
         title: "🎀 Selamat Ulang Tahun 🎀",
         message: "Semoga harimu penuh warna pastel, tawa manis, dan vibes estetik ala Gen Z 💕",
-        buttons: '<button onclick="nextPage(2)">Next ➜</button>',
-        showChibi: false
+        buttons: '<button onclick="nextPage(2)">Next ➜</button>'
       },
       {
         title: "🌸 Harapan Manis 🌸",
         message: "Semoga semua impianmu jadi nyata, kayak aesthetic feed IG yang goals banget ✨",
-        buttons: '<button onclick="nextPage(3)">Next ➜</button>',
-        showChibi: false
+        buttons: '<button onclick="nextPage(3)">Next ➜</button>'
       },
       {
         title: "💖 Stay Happy 💖",
         message: "Jangan lupa self-love & healing vibes setiap hari, kamu deserve yang terbaik 💫",
-        buttons: '<button onclick="nextPage(4)">Next ➜</button>',
-        showChibi: false
+        buttons: '<button onclick="nextPage(4)">Next ➜</button>'
       },
       {
         title: "✨ Glow Up ✨",
@@ -184,6 +185,13 @@
         document.getElementById('message').innerText = data.message;
         document.getElementById('buttons').innerHTML = data.buttons;
         card.style.animation = 'fadeScaleIn 0.6s ease forwards';
+
+        // Tampilkan animasi chibi hanya di card terakhir
+        if (data.showChibi) {
+          chibiAnim.style.display = 'block';
+        } else {
+          chibiAnim.style.display = 'none';
+        }
       }, 400);
     }
 
@@ -204,7 +212,6 @@
       return Math.random() * (max - min) + min;
     }
 
-    // confetti jatuh dari atas (emoji 😭)
     function createTopConfetti() {
       for (let i = 0; i < 100; i++) {
         particles.push({
@@ -218,16 +225,15 @@
       }
     }
 
-    // confetti meledak dari samping (warna-warni persegi kecil)
     function createSideBursts() {
       const colors = ["#ff4d88", "#ffcc00", "#66ccff", "#77dd77", "#ff7bbf"];
-      for (let i = 0; i < 80; i++) {
+      for (let i = 0; i < 150; i++) { // ditambah dari 80 ke 150
         const fromLeft = Math.random() < 0.5;
         sideBursts.push({
-          x: fromLeft ? 0 : canvas.width,
+          x: fromLeft ? -20 : canvas.width+20,
           y: random(canvas.height/4, (3*canvas.height)/4),
           size: random(6, 12),
-          speedX: fromLeft ? random(3,6) : -random(3,6),
+          speedX: fromLeft ? random(5,9) : -random(5,9),
           speedY: random(-2,2),
           color: colors[Math.floor(Math.random()*colors.length)],
           opacity: 1
@@ -238,7 +244,6 @@
     function drawParticles() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-      // atas
       for (let p of particles) {
         ctx.globalAlpha = p.opacity;
         ctx.font = "24px Poppins";
@@ -247,7 +252,6 @@
         p.opacity -= 0.004;
       }
 
-      // samping
       for (let s of sideBursts) {
         ctx.globalAlpha = s.opacity;
         ctx.fillStyle = s.color;
@@ -274,6 +278,12 @@
       createSideBursts();
       cancelAnimationFrame(animationFrameId);
       drawParticles();
+
+      // Animasi chibi bergerak
+      if (chibiAnim.style.display === 'block') {
+        chibiAnim.classList.add('chibi-move');
+        setTimeout(() => chibiAnim.classList.remove('chibi-move'), 600);
+      }
     }
   </script>
 </body>
