@@ -183,10 +183,20 @@
     }
 
     @media (max-width: 600px){
+      /* Pastikan gambar tidak menutupi tombol di mobile */
       #card-5 img{
+        position:static; /* lepaskan dari absolute supaya ikut alur dokumen */
+        display:block;
         width:120px;
-        right:12px;
-        bottom:12px;
+        height:auto;
+        margin:8px auto 0; /* taruh di tengah bawah teks */
+      }
+      /* Susun tombol vertikal agar lebih lega di layar kecil */
+      #card-5 div{
+        flex-direction:column;
+        align-items:center;
+        gap:12px;
+        margin-top:20px;
       }
     }
 
@@ -331,5 +341,3 @@
   </script>
 </body>
 </html>
-
-
