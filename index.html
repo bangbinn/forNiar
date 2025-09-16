@@ -3,108 +3,137 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-  <title>Happy Birthday</title>
-  <!-- Tambahkan font yang lebih menarik -->
+  <title>Happy Birthday + Amplop Pembuka</title>
   <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Quicksand:wght@400;500;600&display=swap" rel="stylesheet">
   <style>
-    /* Reset & Base */
-    * { margin: 0; padding: 0; box-sizing: border-box; font-family: "Quicksand", sans-serif; }
-    html, body { height: 100%; -webkit-text-size-adjust: 100%; touch-action: manipulation; }
-
-    body {
-      background: linear-gradient(135deg, #ffdde1, #ee9ca7);
-      display: flex; justify-content: center; align-items: center;
-      height: 100vh; overflow: hidden; text-align: center; padding: 20px;
-      position: relative;
+    /* ============ RESET & BASE ============ */
+    *{margin:0;padding:0;box-sizing:border-box}
+    html,body{height:100%;-webkit-text-size-adjust:100%;touch-action:manipulation}
+    body{
+      background:linear-gradient(135deg,#ffdde1,#ee9ca7);
+      display:flex;justify-content:center;align-items:center;
+      height:100vh;overflow:hidden;text-align:center;padding:20px;position:relative;
+      font-family:"Quicksand",system-ui,Arial,sans-serif;
     }
 
-    /* Container */
-    .container {
-      width: 90%; max-width: 600px; min-height: 400px;
-      padding: 40px 30px 100px; border-radius: 20px;
-      box-shadow: 0 15px 35px rgba(0,0,0,0.2);
-      background: linear-gradient(180deg, #fff, #ffe6f7);
-      border: 3px solid #ff7bbf;
-      opacity: 0; transform: scale(0.9);
-      animation: fadeScaleIn 0.6s ease forwards;
-      display: flex; flex-direction: column; justify-content: flex-start;
-      position: relative; z-index: 1;
-      text-align: center;
+    /* ============ AMPlop Overlay (di awal halaman) ============ */
+    :root{
+      --env-primary:#f7f0e9; --env-edge:#e3d7c8; --flap:#e45757; --flap-dark:#b73d3d; --paper:#fffaf2;
+      --shadow:0 10px 25px rgba(0,0,0,.12), 0 2px 6px rgba(0,0,0,.08);
+      --anim-open:800ms; --anim-flap:700ms;
     }
+    #envelopeOverlay{position:fixed;inset:0;display:grid;place-items:center;z-index:10;backdrop-filter:saturate(1.1)}
+    #envelopeOverlay.hidden{display:none}
+    .stage{perspective:1000px}
+    .envelope{position:relative;width:340px;height:220px;border-radius:14px;background:var(--env-primary);
+      box-shadow:var(--shadow);overflow:hidden;transform-style:preserve-3d;border:1px solid var(--env-edge);
+      background-image:linear-gradient(180deg,rgba(255,255,255,.55),rgba(255,255,255,0) 40%),
+        radial-gradient(700px 280px at 50% -40%,#fff 0%,rgba(255,255,255,0) 60%),
+        repeating-linear-gradient(0deg,rgba(0,0,0,.015) 0 2px,rgba(255,255,255,0) 2px 4px)}
+    .envelope::before,.envelope::after{content:"";position:absolute;inset:0;pointer-events:none;
+      background:conic-gradient(from 225deg at 0 100%,#0000 0 90deg,rgba(0,0,0,.06) 0),
+                 conic-gradient(from 45deg at 100% 100%,#0000 0 90deg,rgba(0,0,0,.06) 0);
+      mix-blend-mode:multiply;opacity:.3}
+    .bottom{position:absolute;bottom:0;left:0;width:0;height:0;z-index:1;border-left:170px solid transparent;border-right:170px solid transparent;border-top:110px solid #f0e6da;filter:drop-shadow(0 -1px 0 rgba(0,0,0,.06))}
+    .flap{position:absolute;top:0;left:0;width:0;height:0;z-index:3;transform-origin:top;transition:transform var(--anim-flap) cubic-bezier(.2,.8,.2,1);border-left:170px solid transparent;border-right:170px solid transparent;border-bottom:120px solid var(--flap)}
+    .flap::before{content:"";position:absolute;inset:-120px -170px 0;pointer-events:none;background:linear-gradient(180deg,rgba(255,255,255,.35),rgba(255,255,255,0) 60%),radial-gradient(600px 260px at 50% -40%,rgba(255,255,255,.45),rgba(255,255,255,0) 60%),linear-gradient(180deg,var(--flap) 0%,var(--flap-dark) 100%);-webkit-mask:linear-gradient(to bottom,#000 0 120px,#0000 0);mask:linear-gradient(to bottom,#000 0 120px,#0000 0);border-bottom-left-radius:12px;border-bottom-right-radius:12px}
+    .envelope.open .flap{transform:rotateX(180deg)}
+    .letter{position:absolute;inset:14px;background:var(--paper);border-radius:10px;padding:20px;z-index:2;box-shadow:0 2px 0 rgba(0,0,0,.05) inset,0 -2px 0 rgba(0,0,0,.04) inset;transform:translateY(60%);transition:transform var(--anim-open) cubic-bezier(.2,.9,.2,1)}
+    .letter h3{margin:0 0 6px;font-weight:700;font-size:18px}
+    .letter p{margin:0;line-height:1.5}
+    .envelope.open .letter{transform:translateY(0)}
+    .seal{--size:76px;position:absolute;left:50%;top:86px;translate:-50% -50%;z-index:4;width:var(--size);height:var(--size);border-radius:999px;border:none;color:#fff;font-weight:700;letter-spacing:.5px;background:radial-gradient(circle at 30% 30%,#ff8a8a,#e45757 60%,#b73939 100%);box-shadow:0 8px 16px rgba(228,87,87,.35),inset 0 3px 8px rgba(255,255,255,.35);display:grid;place-items:center;text-decoration:none;user-select:none;-webkit-user-select:none;cursor:pointer;touch-action:manipulation}
+    .seal:focus{outline:3px solid #1d4ed8;outline-offset:3px}
+    .seal:active{transform:translate(-50%,-50%) scale(.96)}
+    .seal .heart{width:22px;height:22px;position:relative;transform:rotate(-45deg)}
+    .seal .heart::before,.seal .heart::after{content:"";position:absolute;width:12px;height:18px;background:#fff;border-radius:12px 12px 0 0;left:5px;top:2px}
+    .seal .heart::after{left:0;top:7px;width:18px;height:12px;border-radius:12px 12px 0 0}
+    .envelope.open .seal{opacity:0;pointer-events:none;transition:opacity .3s ease}
+    .hint{margin-top:14px;font-size:12px;color:#fff;text-shadow:0 1px 3px rgba(0,0,0,.35)}
 
-    /* Animations */
-    @keyframes fadeScaleIn { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
-    @keyframes fadeOut { from { opacity: 1; transform: scale(1); } to { opacity: 0; transform: scale(0.9); } }
+    /* ============ KONTEN UTAMA (CARD) ============ */
+    .container{width:90%;max-width:600px;min-height:400px;padding:40px 30px 100px;border-radius:20px;box-shadow:0 15px 35px rgba(0,0,0,0.2);background:linear-gradient(180deg,#fff,#ffe6f7);border:3px solid #ff7bbf;opacity:0;transform:scale(.9);animation:fadeScaleIn .6s ease forwards;display:flex;flex-direction:column;justify-content:flex-start;position:relative;z-index:1;text-align:center}
+    @keyframes fadeScaleIn{from{opacity:0;transform:scale(.9)}to{opacity:1;transform:scale(1)}}
+    @keyframes fadeOut{from{opacity:1;transform:scale(1)}to{opacity:0;transform:scale(.9)}}
+    h2{font-family:"Pacifico",cursive;font-size:clamp(28px,6vw,42px);margin-bottom:20px;color:#ff4d88;text-shadow:2px 2px 4px rgba(0,0,0,.15);text-align:center}
+    p{font-size:clamp(18px,4vw,22px);margin-bottom:30px;color:#444;line-height:1.6;text-align:center}
+    #buttons{position:absolute;bottom:30px;left:50%;transform:translateX(-50%)}
+    button{padding:16px 36px;border:none;border-radius:12px;background:linear-gradient(135deg,#ff7bbf,#ff4d88);color:#fff;cursor:pointer;font-size:16px;font-weight:600;transition:.25s;box-shadow:0 6px 14px rgba(255,77,136,.25);margin:10px}
+    button:hover{transform:translateY(-3px)}
+    canvas{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:2}
+    .chibi-anim{position:absolute;bottom:10px;right:10px;width:150px;height:auto;z-index:3;transition:transform .6s ease}
+    .chibi-move{transform:translateY(-30px) rotate(10deg) scale(1.1)}
+    .extra-img-2{position:absolute;bottom:10px;left:10px;width:140px;height:auto;z-index:2;pointer-events:none}
+    .extra-img-3{position:absolute;bottom:0;right:20px;width:220px;height:auto;z-index:2;pointer-events:none}
+    .extra-img-4{position:absolute;bottom:0;left:10px;width:180px;height:auto;z-index:2;pointer-events:none}
+    @media (max-width:480px){.container{max-width:95%;min-height:360px;padding:30px 20px 80px;border-radius:18px}h2{font-size:26px}p{font-size:16px}button{padding:14px 24px;font-size:14px}.chibi-anim{width:110px}.extra-img-2{width:100px}.extra-img-3{width:160px;bottom:0;right:15px}.extra-img-4{width:120px;bottom:0;left:5px}}
 
-    /* Text */
-    h2 { font-family: "Pacifico", cursive; font-size: clamp(28px, 6vw, 42px); margin-bottom: 20px; color: #ff4d88; text-shadow: 2px 2px 4px rgba(0,0,0,0.15); text-align: center; }
-    p { font-size: clamp(18px, 4vw, 22px); margin-bottom: 30px; color: #444; line-height: 1.6; text-align: center; font-family: "Quicksand", sans-serif; }
-
-    /* Buttons */
-    #buttons { position: absolute; bottom: 30px; left: 50%; transform: translateX(-50%); }
-    button {
-      padding: 16px 36px; border: none; border-radius: 12px;
-      background: linear-gradient(135deg, #ff7bbf, #ff4d88);
-      color: white; cursor: pointer; font-size: 16px; font-weight: 600;
-      transition: 0.25s; box-shadow: 0 6px 14px rgba(255,77,136,0.25);
-      margin: 10px; touch-action: manipulation;
-      font-family: "Quicksand", sans-serif;
-    }
-    button:hover { transform: translateY(-3px); }
-
-    /* Canvas Confetti */
-    canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 2; }
-
-    /* Chibi Animation */
-    .chibi-anim { position: absolute; bottom: 10px; right: 10px; width: 150px; height: auto; z-index: 3; transition: transform 0.6s ease; }
-    .chibi-move { transform: translateY(-30px) rotate(10deg) scale(1.1); }
-
-    /* Tambahan gambar */
-    .extra-img-2 {
-      position: absolute; bottom: 10px; left: 10px; width: 140px; height: auto; z-index: 2; pointer-events: none;
-    }
-    .extra-img-3 {
-      position: absolute; bottom: 0; right: 20px; width: 220px; height: auto; z-index: 2; pointer-events: none;
-    }
-    .extra-img-4 {
-      position: absolute; bottom: 0; left: 10px; width: 180px; height: auto; z-index: 2; pointer-events: none;
-    }
-
-    /* Responsive */
-    @media (max-width: 480px) {
-      .container { max-width: 95%; min-height: 360px; padding: 30px 20px 80px; border-radius: 18px; }
-      h2 { font-size: 26px; } p { font-size: 16px; }
-      button { padding: 14px 24px; font-size: 14px; }
-      .chibi-anim { width: 110px; }
-      .extra-img-2 { width: 100px; }
-      .extra-img-3 { width: 160px; bottom: 0; right: 15px; }
-      .extra-img-4 { width: 120px; bottom: 0; left: 5px; }
-    }
+    /* Sembunyikan konten utama sampai amplop dibuka */
+    .app-hidden{visibility:hidden}
+    .app-visible{visibility:visible}
   </style>
 </head>
 <body>
+  <!-- ====== Amplop di awal halaman ====== -->
+  <div id="envelopeOverlay">
+    <div class="stage">
+      <div class="envelope" id="envelope">
+        <div class="flap"></div>
+        <div class="bottom"></div>
+        <div class="letter">
+          <h3>Surat untukmu 💌</h3>
+          <p>Ketuk segel untuk membuka dan lanjut ke kartu berikutnya ✨</p>
+        </div>
+        <a class="seal" id="openSeal" href="#" role="button" aria-label="Buka Amplop" aria-controls="envelope">
+          <span class="heart" aria-hidden="true"></span>
+        </a>
+      </div>
+      <div class="hint">Klik/ketuk segel untuk membuka</div>
+    </div>
+  </div>
+
+  <!-- ====== Konten utama (disembunyikan dulu) ====== -->
   <canvas id="confettiCanvas"></canvas>
-  <div class="container" id="card">
+  <div class="container app-hidden" id="card">
     <h2 id="title">🎀Happy Birthday🎀</h2>
     <p id="message">25 bukan hanya angka, tapi cerminan dari segala perjuangan, mimpi, dan doa yang sudah kamu jalani. Semoga tahun ini menjadi awal dari banyak keajaiban baru dalam hidupmu💕</p>
     <div id="buttons">
       <button onclick="nextPage(2)">Next ➜</button>
     </div>
-
-    <!-- Tambahan gambar di card kedua -->
     <img src="https://i.ibb.co/p6cJwdKr/sample-image2.png" alt="Gambar Ekstra 2" class="extra-img-2" id="extraImg2" style="display:none;" referrerpolicy="no-referrer" loading="lazy">
-
-    <!-- Gambar card pertama (dulu card ke-3) -->
     <img src="https://i.ibb.co/gbMZjSYB/sample-image3.png" alt="Gambar Ekstra 3" class="extra-img-3" id="extraImg3" style="display:block;" referrerpolicy="no-referrer" loading="lazy">
-
-    <!-- Gambar baru di card ke-3 -->
     <img src="" data-ibb-id="4ZSjBB9b" alt="Gambar Ekstra 4" class="extra-img-4" id="extraImg4" style="display:none;" referrerpolicy="no-referrer" loading="lazy">
-
     <img src="https://i.ibb.co/jP1tQGp6/chibi.gif" alt="Chibi Animasi" class="chibi-anim" id="chibiAnim" style="display:none;">
   </div>
 
   <script>
-    const card = document.getElementById('card');
+    // ====== Logika Amplop: buka di semua device, lalu lanjut ke card berikutnya ======
+    (function(){
+      const overlay = document.getElementById('envelopeOverlay');
+      const env = document.getElementById('envelope');
+      const seal = document.getElementById('openSeal');
+      const card = document.getElementById('card');
+      const NAV_DELAY = Math.max(parseInt(getComputedStyle(document.documentElement).getPropertyValue('--anim-open'))||800, parseInt(getComputedStyle(document.documentElement).getPropertyValue('--anim-flap'))||700) + 200;
+      let done = false;
+
+      function revealApp(){
+        overlay.classList.add('hidden');
+        card.classList.remove('app-hidden');
+        card.classList.add('app-visible');
+      }
+      function goNext(){
+        if(done) return; done = true;
+        const reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
+        if(reduce.matches){ revealApp(); nextPage(2); return; }
+        env.classList.add('open');
+        setTimeout(()=>{ revealApp(); nextPage(2); }, NAV_DELAY);
+      }
+      seal.addEventListener('click', (e)=>{ e.preventDefault(); goNext(); }, {passive:false});
+      seal.addEventListener('keydown', (e)=>{ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); goNext(); }});
+    })();
+
+    // ====== Script asli kartu ======
+    const cardEl = document.getElementById('card');
     const chibiAnim = document.getElementById('chibiAnim');
     const extraImg2 = document.getElementById('extraImg2');
     const extraImg3 = document.getElementById('extraImg3');
@@ -117,95 +146,43 @@
       { title: "✨ Glow Up ✨", message: "Terkadang hari-hari yang kita anggap biasa yang membuat kita merasa hidup, anddd jangan lupa, tidak semua bunga mekarnya bersamaan", buttons: '<button onclick="startCelebration()">Rayakan</button> <button onclick="nextPage(1)">Ulangi</button>', showChibi: true }
     ];
 
-    function nextPage(page) {
-      card.style.animation = 'fadeOut 0.4s ease forwards';
-      setTimeout(() => {
+    function nextPage(page){
+      cardEl.style.animation='fadeOut 0.4s ease forwards';
+      setTimeout(()=>{
         const data = pages[page-1];
         document.getElementById('title').innerText = data.title;
         document.getElementById('message').innerText = data.message;
         document.getElementById('buttons').innerHTML = data.buttons;
-        card.style.animation = 'fadeScaleIn 0.6s ease forwards';
+        cardEl.style.animation='fadeScaleIn 0.6s ease forwards';
         chibiAnim.style.display = data.showChibi ? 'block' : 'none';
         extraImg2.style.display = data.showExtra2 ? 'block' : 'none';
         extraImg3.style.display = data.showExtra3 ? 'block' : 'none';
         extraImg4.style.display = data.showExtra4 ? 'block' : 'none';
-      }, 400);
+      },400);
     }
 
-    // ==== Perbaikan pemuatan gambar imgbb dengan hanya ID ====
-    function resolveImgbbById(imgEl, id) {
-      if (!imgEl) return;
-      const exts = ['png','jpg','jpeg','gif','webp'];
-      const names = ['image','img','photo','pic',id,'file'];
-      let i = 0;
-      function tryNext() {
-        if (i >= exts.length * names.length) {
-          console.warn('Gagal memuat dari i.ibb.co untuk ID:', id);
-          imgEl.src = 'data:image/svg+xml;utf8,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="180" height="120"><rect width="100%" height="100%" fill="#ffe6f7"/><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" fill="#ff4d88" font-family="Poppins, sans-serif" font-size="14">Gambar tidak ditemukan</text></svg>');
-          return;
-        }
-        const name = names[i % names.length];
-        const ext = exts[Math.floor(i / names.length) % exts.length];
-        const url = `https://i.ibb.co/${id}/${name}.${ext}`;
-        i++;
-        const test = new Image();
-        test.onload = () => { imgEl.src = url; };
-        test.onerror = tryNext;
-        test.referrerPolicy = 'no-referrer';
-        test.src = url;
+    // ==== Perbaikan pemuatan gambar imgbb hanya dengan ID ====
+    function resolveImgbbById(imgEl,id){
+      if(!imgEl) return; const exts=['png','jpg','jpeg','gif','webp']; const names=['image','img','photo','pic',id,'file']; let i=0;
+      function tryNext(){
+        if(i >= exts.length*names.length){ console.warn('Gagal memuat dari i.ibb.co untuk ID:', id); imgEl.src='data:image/svg+xml;utf8,'+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="180" height="120"><rect width="100%" height="100%" fill="#ffe6f7"/><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" fill="#ff4d88" font-family="Poppins, sans-serif" font-size="14">Gambar tidak ditemukan</text></svg>'); return; }
+        const name=names[i%names.length]; const ext=exts[Math.floor(i/names.length)%exts.length]; const url=`https://i.ibb.co/${id}/${name}.${ext}`; i++; const test=new Image(); test.onload=()=>{imgEl.src=url}; test.onerror=tryNext; test.referrerPolicy='no-referrer'; test.src=url;
       }
       tryNext();
     }
-
-    document.addEventListener('DOMContentLoaded', () => {
-      const id = extraImg4.getAttribute('data-ibb-id');
-      if (id) resolveImgbbById(extraImg4, id);
-    });
+    document.addEventListener('DOMContentLoaded',()=>{ const id=extraImg4.getAttribute('data-ibb-id'); if(id) resolveImgbbById(extraImg4,id); });
 
     // ==== Confetti ====
     const canvas = document.getElementById('confettiCanvas');
     const ctx = canvas.getContext('2d');
-    let particles = [], sideBursts = [], animationFrameId;
-
-    function resizeCanvas() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
-    window.addEventListener('resize', resizeCanvas); resizeCanvas();
-    function random(min, max) { return Math.random() * (max - min) + min; }
-
-    function createTopConfetti() {
-      for (let i = 0; i < 100; i++) {
-        particles.push({ x: random(0, canvas.width), y: -20, size: random(16, 28), speedY: random(2, 4), text: "😭", opacity: 1 });
-      }
-    }
-
-    function createSideBursts() {
-      const colors = ["#ff4d88", "#ffcc00", "#66ccff", "#77dd77", "#ff7bbf"];
-      for (let i = 0; i < 150; i++) {
-        const fromLeft = Math.random() < 0.5;
-        sideBursts.push({ x: fromLeft ? -20 : canvas.width+20, y: random(canvas.height/4, (3*canvas.height)/4), size: random(6, 12), speedX: fromLeft ? random(5,9) : -random(5,9), speedY: random(-2,2), color: colors[Math.floor(Math.random()*colors.length)], opacity: 1 });
-      }
-    }
-
-    function drawParticles() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      for (let p of particles) { ctx.globalAlpha = p.opacity; ctx.font = "24px Poppins"; ctx.fillText(p.text, p.x, p.y); p.y += p.speedY; p.opacity -= 0.004; }
-      for (let s of sideBursts) { ctx.globalAlpha = s.opacity; ctx.fillStyle = s.color; ctx.fillRect(s.x, s.y, s.size, s.size); s.x += s.speedX; s.y += s.speedY; s.opacity -= 0.01; }
-      ctx.globalAlpha = 1;
-      particles = particles.filter(p => p.opacity > 0 && p.y < canvas.height+50);
-      sideBursts = sideBursts.filter(s => s.opacity > 0 && s.x > -50 && s.x < canvas.width+50);
-      if (particles.length > 0 || sideBursts.length > 0) animationFrameId = requestAnimationFrame(drawParticles);
-    }
-
-    function startCelebration() {
-      particles = []; sideBursts = [];
-      createTopConfetti(); createSideBursts();
-      cancelAnimationFrame(animationFrameId);
-      drawParticles();
-      if (chibiAnim.style.display === 'block') {
-        chibiAnim.classList.add('chibi-move');
-        setTimeout(() => chibiAnim.classList.remove('chibi-move'), 600);
-      }
-    }
+    let particles=[], sideBursts=[], animationFrameId;
+    function resizeCanvas(){ canvas.width=window.innerWidth; canvas.height=window.innerHeight; }
+    window.addEventListener('resize',resizeCanvas); resizeCanvas();
+    function random(min,max){ return Math.random()*(max-min)+min }
+    function createTopConfetti(){ for(let i=0;i<100;i++){ particles.push({x:random(0,canvas.width), y:-20, size:random(16,28), speedY:random(2,4), text:"😭", opacity:1}); } }
+    function createSideBursts(){ const colors=["#ff4d88","#ffcc00","#66ccff","#77dd77","#ff7bbf"]; for(let i=0;i<150;i++){ const fromLeft=Math.random()<0.5; sideBursts.push({x:fromLeft?-20:canvas.width+20, y:random(canvas.height/4,(3*canvas.height)/4), size:random(6,12), speedX:fromLeft?random(5,9):-random(5,9), speedY:random(-2,2), color:colors[Math.floor(Math.random()*colors.length)], opacity:1}); } }
+    function drawParticles(){ ctx.clearRect(0,0,canvas.width,canvas.height); for(let p of particles){ ctx.globalAlpha=p.opacity; ctx.font="24px Poppins"; ctx.fillText(p.text,p.x,p.y); p.y+=p.speedY; p.opacity-=0.004; } for(let s of sideBursts){ ctx.globalAlpha=s.opacity; ctx.fillStyle=s.color; ctx.fillRect(s.x,s.y,s.size,s.size); s.x+=s.speedX; s.y+=s.speedY; s.opacity-=0.01; } ctx.globalAlpha=1; particles=particles.filter(p=>p.opacity>0&&p.y<canvas.height+50); sideBursts=sideBursts.filter(s=>s.opacity>0&&s.x>-50&&s.x<canvas.width+50); if(particles.length>0||sideBursts.length>0) animationFrameId=requestAnimationFrame(drawParticles); }
+    function startCelebration(){ particles=[]; sideBursts=[]; createTopConfetti(); createSideBursts(); cancelAnimationFrame(animationFrameId); drawParticles(); if(chibiAnim.style.display==='block'){ chibiAnim.classList.add('chibi-move'); setTimeout(()=>chibiAnim.classList.remove('chibi-move'),600); } }
   </script>
 </body>
 </html>
-
