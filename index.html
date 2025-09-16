@@ -6,10 +6,10 @@
   <title>Ucapan Ulang Tahun 💖</title>
   <style>
     :root{
-      --bg1:#fff1f7; --bg2:#ffe3f0; --spark:#ffd1e6; --spark2:#ffc2df;
-      --text:#4a2a38; --muted:#7c5365;
+      --bg1:#4d1f33; --bg2:#662244; --spark:#803355; --spark2:#993366;
+      --text:#f8dfe8; --muted:#d9a8c0;
       --btn:#ff5fa3; --btn2:#ff77b7; --btnText:#fff;
-      --cardBg:#ffd6e8;
+      --cardBg:#803355;
     }
 
     *{box-sizing:border-box}
@@ -27,7 +27,7 @@
     .wrap{min-height:100dvh; display:grid; place-items:center; padding:28px}
     .stage{width:min(940px, 100%); min-height:100dvh; display:grid; place-items:center; padding:16px; position:relative}
 
-    .card{display:none; background:var(--cardBg); padding:32px; box-shadow:0 10px 28px rgba(255,105,166,.35); position:relative; margin:0 auto;}
+    .card{display:none; background:var(--cardBg); padding:32px; box-shadow:0 10px 28px rgba(0,0,0,.35); position:relative; margin:0 auto; border-radius:12px;}
     .card.active{display:flex; flex-direction:column; align-items:center; gap:20px; animation:fade .35s ease}
 
     /* Keyframes umum */
@@ -47,21 +47,21 @@
     #card-2, #card-3, #card-4, #card-5 {
       width: clamp(280px, 80vw, 600px);
       height: clamp(280px, 70vh, 420px);
-      border-radius: 0;
+      border-radius: 12px;
       justify-content: center;
       will-change: transform, opacity; /* smooth */
     }
 
-    h1,h2{margin:0; text-align:center; color:#401826}
+    h1,h2{margin:0; text-align:center; color:#ffd6e8}
     .lead{color:var(--muted); text-align:center; max-width:52ch}
 
     .btn{
       appearance:none; border:none; cursor:pointer; font-weight:800;
       background:linear-gradient(180deg, var(--btn2), var(--btn)); color:var(--btnText);
-      padding:14px 24px; border-radius:999px; box-shadow:0 10px 20px rgba(255,105,166,.35);
+      padding:14px 24px; border-radius:999px; box-shadow:0 10px 20px rgba(0,0,0,.35);
       transition:transform .15s ease, box-shadow .2s ease;
     }
-    .btn:hover{transform:translateY(-2px); box-shadow:0 16px 28px rgba(255,105,166,.45)}
+    .btn:hover{transform:translateY(-2px); box-shadow:0 16px 28px rgba(0,0,0,.45)}
 
     #card-1{
       background:none; border:none; box-shadow:none; padding:0; min-height:auto;
@@ -70,36 +70,46 @@
       width:clamp(260px,70vw,500px);
       aspect-ratio:4/3;
       position:relative;
-      background:#ffd6e8;
-      box-shadow:0 16px 44px rgba(255,105,166,.42);
+      background:#803355;
+      box-shadow:0 16px 44px rgba(0,0,0,.42);
       cursor:pointer;
     }
     .envelope .flap-top{
       position:absolute; top:0; left:0; right:0; height:50%;
-      background:#ffbcd8;
+      background:#993366;
       clip-path:polygon(0 0,100% 0,50% 100%);
       transform-origin:top; transition:transform .8s ease;
     }
     .envelope.open .flap-top{transform:rotateX(180deg)}
     .envelope .flap-bottom{
       position:absolute; bottom:0; left:0; right:0; height:50%;
-      background:#ffc9df;
+      background:#a64d79;
       clip-path:polygon(0 100%,50% 0,100% 100%);
     }
     .envelope .flap-left{
       position:absolute; top:0; bottom:0; left:0; width:50%;
-      background:#ffb2d2;
+      background:#8c2f5c;
       clip-path:polygon(0 0,100% 50%,0 100%);
     }
     .envelope .flap-right{
       position:absolute; top:0; bottom:0; right:0; width:50%;
-      background:#ffb2d2;
+      background:#8c2f5c;
       clip-path:polygon(100% 0,100% 100%,0 50%);
     }
     .cta-open{
       position:absolute; left:50%; top:50%; transform:translate(-50%,-50%);
-      padding:12px 20px; background:linear-gradient(135deg,#ffb6d2,#ff7fb3);
-      border:none; border-radius:999px; color:#fff; font-weight:bold; box-shadow:0 12px 26px rgba(255,105,166,.45);
+      padding:12px 20px; background:linear-gradient(135deg,#e06ba0,#c94f87);
+      border:none; border-radius:999px; color:#fff; font-weight:bold; box-shadow:0 12px 26px rgba(0,0,0,.45);
+    }
+
+    /* Gambar di card 2 */
+    #card-2 img{
+      position:absolute;
+      right:16px;
+      bottom:16px;
+      width:180px;
+      height:auto;
+      border-radius:8px;
     }
 
     /* Tombol next di tengah bawah card */
@@ -145,6 +155,7 @@
       <section class="card" id="card-2">
         <h2>🎀Happy Birthday🎀</h2>
         <p class="lead">25 bukan hanya angka, tapi cerminan dari segala perjuangan, mimpi, dan doa yang udah kamu jalani.💕</p>
+        <img src="https://i.ibb.co.com/KxS83NkD/birthday.png" alt="birthday image">
         <div class="next-cta"><button class="btn" data-next>Next ➜</button></div>
       </section>
 
