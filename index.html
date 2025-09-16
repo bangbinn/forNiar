@@ -40,11 +40,14 @@
     @keyframes slideInRight{from{transform:translateX(24px); opacity:0} to{transform:none; opacity:1}}
     @keyframes zoomFade{from{transform:scale(.96); opacity:0} to{transform:scale(1); opacity:1}}
     @keyframes flipUp{from{transform:rotateX(12deg) translateY(10px); opacity:0; transform-origin:bottom} to{transform:none; opacity:1}}
-    @keyframes fadeInImg{from{opacity:0; transform:translateY(10px);} to{opacity:1; transform:none;}}
+    @keyframes sway{0%,100%{transform:translateX(0);} 50%{transform:translateX(10px);}}
+    @keyframes bounce{
+      0%,100%{transform:translateY(0);} 
+      50%{transform:translateY(-15px);}
+    }
 
     /* Animasi khusus per card (2-5) */
     #card-2.active{animation:slideUpFade .45s ease-out both}
-    #card-2.active img{animation:fadeInImg .6s ease-out .2s both;}
     #card-3.active{animation:slideInRight .45s cubic-bezier(.2,.9,.2,1) both}
     #card-4.active{animation:zoomFade .38s ease-out both}
     #card-5.active{animation:flipUp .5s cubic-bezier(.2,.9,.2,1) both}
@@ -116,11 +119,70 @@
       height:auto;
       border-radius:8px;
       max-width:40%;
-      opacity:0;
+      animation:sway 2s ease-in-out infinite;
     }
 
     @media (max-width: 600px){
       #card-2 img{
+        width:120px;
+        right:12px;
+        bottom:12px;
+      }
+    }
+
+    /* Gambar di card 3 */
+    #card-3 img{
+      position:absolute;
+      left:32px;
+      bottom:16px;
+      width:180px;
+      height:auto;
+      border-radius:8px;
+      max-width:40%;
+      animation:sway 2s ease-in-out infinite;
+    }
+
+    @media (max-width: 600px){
+      #card-3 img{
+        width:120px;
+        left:12px;
+        bottom:12px;
+      }
+    }
+
+    /* Gambar di card 4 */
+    #card-4 img{
+      position:absolute;
+      left:32px;
+      bottom:16px;
+      width:180px;
+      height:auto;
+      border-radius:8px;
+      max-width:40%;
+      animation:sway 2s ease-in-out infinite;
+    }
+
+    @media (max-width: 600px){
+      #card-4 img{
+        width:120px;
+        left:12px;
+        bottom:12px;
+      }
+    }
+
+    /* Gambar di card 5 */
+    #card-5 img{
+      position:absolute;
+      right:32px;
+      bottom:16px;
+      width:180px;
+      height:auto;
+      border-radius:8px;
+      max-width:40%;
+    }
+
+    @media (max-width: 600px){
+      #card-5 img{
         width:120px;
         right:12px;
         bottom:12px;
@@ -177,18 +239,21 @@
       <section class="card" id="card-3">
         <h2>🌸 Harapan Manis 🌸</h2>
         <p class="lead">Semoga tahun ini menjadi awal dari banyak keajaiban baru dalam hidupmu✨</p>
+        <img src="https://i.ibb.co.com/h33XnT1/wish.png" alt="wish image">
         <div class="next-cta"><button class="btn" data-next>Next ➜</button></div>
       </section>
 
       <section class="card" id="card-4">
         <h2>💖 Stay Happy 💖</h2>
         <p class="lead">Jangan lupa self love, kamu deserve yang terbaik 💫</p>
+        <img src="https://i.ibb.co.com/jvSnpVRk/happy.png" alt="happy image">
         <div class="next-cta"><button class="btn" data-next>Next ➜</button></div>
       </section>
 
       <section class="card" id="card-5">
         <h2>Sudah Siap Rayakan? 🥳</h2>
         <p class="lead">Dont worry, tidak semua bunga mekarnya bersamaan</p>
+        <img id="celebrateImg" src="https://i.ibb.co.com/99fvZyqk/celebrate.png" alt="celebrate image">
         <div>
           <button class="btn success" id="celebrateBtn">Rayakan 🎊</button>
           <button class="btn warn" id="repeatBtn">Ulangi ↻</button>
@@ -211,7 +276,11 @@
 
     document.querySelectorAll('[data-next]').forEach(btn=>btn.addEventListener('click',()=>showCard(Math.min(current+1,cards.length-1))));
     document.getElementById('repeatBtn').addEventListener('click',()=>showCard(1));
-    document.getElementById('celebrateBtn').addEventListener('click',()=>runConfetti());
+    document.getElementById('celebrateBtn').addEventListener('click',()=>{
+      runConfetti();
+      const img=document.getElementById('celebrateImg');
+      img.style.animation='bounce 1s ease-in-out 3';
+    });
 
     const confettiLayer=document.getElementById('confetti');
     function spawnPiece(style){
